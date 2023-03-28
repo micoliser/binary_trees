@@ -45,4 +45,4 @@ int binary_tree_balance(const binary_tree_t *tree)
 		return (0);
 
 	return (find_h(tree->left) - find_h(tree->right));
-}	
+}

@@ -1,7 +1,7 @@
 #include "binary_trees.h"
 
 /**
- * count_node - counts nodes in a binary tree
+ * count_nodes - counts nodes in a binary tree
  * @tree: the tree
  *
  * Return: number of nodes
@@ -24,7 +24,7 @@ int binary_tree_is_full(const binary_tree_t *tree)
 {
 	if (!tree)
 		return (0);
-	
+
 	/* tree is full if number of nodes is odd */
 	return (count_nodes(tree) % 2);
 }
