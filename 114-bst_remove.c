@@ -1,76 +1,128 @@
 #include "binary_trees.h"
 
 /**
- * _remove - removes a node from a tree
- * @root: the root
- * @to_remove: the node to remove
- *
- * Return: new root
+ * r_case - removes a node from a Binary Search Tree for node->right case
+ * @root: tree root
+ * @node: node to delete
+ * Return: pointer the tree root
  */
-bst_t *_remove(bst_t *root, bst_t *to_remove)
+bst_t *r_case(bst_t *node, bst_t *root)
 {
-	bst_t *temp;
-
-	if (to_remove->right)
-		temp = to_remove->right;
-	else
-		temp = to_remove->left;
-	while (temp->left)
-		temp = temp->left;
-	temp->parent->left = NULL;
-	temp->parent = to_remove->parent;
-	temp->right = to_remove->right;
-	if (temp->right)
-		temp->right->parent = temp;
-	temp->left = to_remove->left;
-	if (temp->left)
-		temp->left->parent = temp;
-	if (to_remove->parent)
+	node->right->left = node->left;
+	node->right->parent = node->parent;
+	if (node->parent)
 	{
-		if (to_remove->parent->left == to_remove)
-			to_remove->parent->left = temp;
-		else
-			to_remove->parent->right = temp;
+		if (node == node->parent->left)
+			node->parent->left = node->right;
+		if (node == node->parent->right)
+			node->parent->right = node->right;
 	}
-	if (to_remove == root)
-	{
-		free(to_remove);
-		return (temp);
-	}
-	else
-	{
-		free(to_remove);
-		return (root);
-	}
+	if (node->left)
+		node->left->parent = node->right;
+	if (root == node)
+		root = node->right;
+	free(node);
+	return (root);
 }
 
 /**
- * bst_remove - removes a node from a binary search tree
- * @root: root node tree
- * @value: value to remove
+ * r_l_case - removes a node from a Binary Search Tree for node->right->l case
+ * @root: tree root
+ * @node: node to delete
+ * Return: pointer the tree root
+ */
+bst_t *r_l_case(bst_t *node, bst_t *root)
+{
+	node->right->left->right = node->right;
+	node->right->left->parent = node->parent;
+	node->right->left->left = node->left;
+	if (node->left)
+		node->left->parent = node->right->left;
+	node->right->parent = node->right->left;
+	if (root == node)
+		root = node->right->left;
+	else
+	{
+		if (node == node->parent->left)
+			node->parent->left = node->right->left;
+		if (node == node->parent->right)
+			node->parent->right = node->right->left;
+	}
+	node->right->left = NULL;
+	free(node);
+	return (root);
+}
+
+/**
+ * binary_tree_is_leaf - checks if a node is a leaf
  *
- * Return: a pointer to new root node
+ * @node: pointer to the node to check
+ * Return: 1 if node is a leaf, otherwise 0
+ */
+int binary_tree_is_leaf(const binary_tree_t *node)
+{
+	int leaf = 0;
+
+	if (node && !(node->left) && !(node->right))
+		leaf = 1;
+
+	return (leaf);
+}
+
+/**
+ * bst_search - searches for a value in a Binary Search Tree
+ *
+ * @tree: tree root
+ * @value: node value
+ * Return: pointer the found node
+ */
+bst_t *bst_search(const bst_t *tree, int value)
+{
+	if (tree && value < tree->n)
+		return (bst_search(tree->left, value));
+
+	if (tree && value > tree->n)
+		return (bst_search(tree->right, value));
+
+	return ((bst_t *)tree);
+}
+
+/**
+ * bst_remove - removes a node from a Binary Search Tree
+ * @root: tree root
+ * @value: node value
+ * Return: pointer the tree root
  */
 bst_t *bst_remove(bst_t *root, int value)
 {
-	bst_t *to_remove, *temp;
+	bst_t *node;
 
-	if (!root)
-		return (NULL);
-	to_remove = root;
-	while (to_remove)
+	node = bst_search(root, value);
+
+	if (node != NULL)
 	{
-		if (to_remove->n == value)
-			break;
-		else if (to_remove->n < value)
-			to_remove = to_remove->right;
+		if (binary_tree_is_leaf(node) == 1)
+		{
+			if (node == node->parent->left)
+				node->parent->left = NULL;
+			if (node == node->parent->right)
+				node->parent->right = NULL;
+			free(node);
+			return (root);
+		}
+		if (node->right && node->right->left)
+			root = r_l_case(node, root);
+		else if (node->right)
+			root = r_case(node, root);
 		else
-			to_remove = to_remove->left;
+		{
+			if (node->parent)
+				node->parent->right = node->left;
+			node->left->parent = node->parent;
+			if (root == node)
+				root = node->left;
+			free(node);
+		}
 	}
-	if (to_remove)
-	{
-		temp = _remove(root, to_remove);
-		return (temp);
-	}
-	return (NULL);
+	return (root);
 }

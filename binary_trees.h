@@ -60,4 +60,11 @@ bst_t *array_to_bst(int *, size_t);
 bst_t *bst_search(const bst_t *, int);
 bst_t *bst_remove(bst_t *, int);
 
+/* AVL tree */
+int binary_tree_is_avl(const binary_tree_t *);
+avl_t *avl_insert(avl_t **, int);
+avl_t *array_to_avl(int *, size_t);
+avl_t *avl_remove(avl_t *, int);
+avl_t *sorted_array_to_avl(int *, size_t);
+
 #endif
