@@ -84,7 +84,7 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 	int r_height = 0, l_height = 0, left, right, is_avl;
 
 	if (!tree)
-		return (1);
+		return (0);
 
 	left = check_left(tree->left, tree->n);
 	right = check_right(tree->right, tree->n);
@@ -97,8 +97,8 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 	if (tree->left)
 		l_height = _height(tree->left) + 1;
 
-	if (r_height - l_height > 1 || l_height - r_height > 1)
-		return (0);
+	if (r_height - l_height <= 1 || l_height - r_height <= 1)
+		return (1);
 
 	is_avl = binary_tree_is_avl(tree->left);
 	if (is_avl == 0)
@@ -107,5 +107,5 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 	if (is_avl == 0)
 		return (0);
 
-	return (1);
+	return (0);
 }
