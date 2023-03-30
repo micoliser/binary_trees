@@ -74,17 +74,17 @@ static size_t _height(const binary_tree_t *tree)
 }
 
 /**
- * binary_tree_is_avl - checks if a binary tree is avl
+ * check_avl - check if a binary tree is avl
  * @tree: the tree
  *
- * Return: 1 if true and 0 otherwise
+ * Return: 1 if true and 0 if false
  */
-int binary_tree_is_avl(const binary_tree_t *tree)
+int check_avl(const binary_tree_t *tree)
 {
 	int r_height = 0, l_height = 0, left, right, is_avl;
 
 	if (!tree)
-		return (0);
+		return (1);
 
 	left = check_left(tree->left, tree->n);
 	right = check_right(tree->right, tree->n);
@@ -97,15 +97,30 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 	if (tree->left)
 		l_height = _height(tree->left) + 1;
 
-	if (r_height - l_height <= 1 || l_height - r_height <= 1)
-		return (1);
-
-	is_avl = binary_tree_is_avl(tree->left);
-	if (is_avl == 0)
-		return (0);
-	is_avl = binary_tree_is_avl(tree->right);
-	if (is_avl == 0)
+	if (r_height - l_height > 1 || l_height - r_height > 1)
 		return (0);
 
-	return (0);
+	is_avl = check_avl(tree->left);
+	if (is_avl == 0)
+		return (0);
+	is_avl = check_avl(tree->right);
+	if (is_avl == 0)
+		return (0);
+
+	return (1);
+}
+
+
+/**
+ * binary_tree_is_avl - checks if a binary tree is avl
+ * @tree: the tree
+ *
+ * Return: 1 if true and 0 otherwise
+ */
+int binary_tree_is_avl(const binary_tree_t *tree)
+{
+	if (!tree)
+		return (0);
+
+	check_avl(tree);
 }
