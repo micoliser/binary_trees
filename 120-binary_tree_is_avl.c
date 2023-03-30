@@ -122,5 +122,5 @@ int binary_tree_is_avl(const binary_tree_t *tree)
 	if (!tree)
 		return (0);
 
-	return(check_avl(tree));
+	return (check_avl(tree));
 }
