@@ -68,7 +68,7 @@ avl_t *avl_remove(avl_t *, int);
 avl_t *sorted_array_to_avl(int *, size_t);
 
 /* Max binary heap */
-heap_t *avl_insert(heap_t **, int);
+heap_t *heap_insert(heap_t **, int);
 heap_t *array_to_heap(int *, size_t);
 
 
